@@ -50,7 +50,7 @@ const sessionConfig = {
     }
 }
 
-mongoose.connect("mongodb://localhost:27017/review-summary", {
+mongoose.connect(dbUrl, {
     useNewUrlParser: true,
     //useCreateIndex: true,
     useUnifiedTopology: true
@@ -61,32 +61,15 @@ db.once("open", () => {
     console.log("Database connected");
 })
 
-
-// const { Client } = require("@googlemaps/google-maps-services-js");
-// const OpenAI = require('openai');
-// const { time } = require("console");
-
-// const map_key = mapKey;
-
-// const openai = new OpenAI({
-//     apiKey: AIkey
-// });
-
-// const client = new Client({});
-// console.log(client);
-// let message_list = [];
-
 const app = express();
 app.use(express.static(path.join(__dirname, 'public')));
 
 // 使用 cors 中间件
-app.use(cors({
-    origin: 'http://localhost:5173', // 允许的来源
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // 允许的 HTTP 方法
-    credentials: true, // 允许发送身份验证凭证（例如 cookies）
-}));
-
-
+// app.use(cors({
+//     origin: 'http://localhost:5173', // 允许的来源
+//     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // 允许的 HTTP 方法
+//     credentials: true, // 允许发送身份验证凭证（例如 cookies）
+// }));
 
 // parsing the body
 app.use(express.json());
@@ -130,4 +113,3 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Serving on port ${port}`)
 })
-//module.exports = { openai, client, dbUrl, store};
