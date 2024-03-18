@@ -17,14 +17,8 @@ const ExpressError = require('./utils/ExpressError');
 const User = require("./models/user");
 const Chat = require("./models/chat");
 
-let dbUrl;
-if (process.env.NODE_ENV === 'production') {
-    // 加载生产环境配置
-    dbUrl = process.env.DB_URL;
-} else {
-    // 加载开发环境配置
-    dbUrl = "mongodb://localhost:27017/review-summary";
-}
+const dbUrl = process.env.DB_URL;
+//dbUrl = "mongodb://localhost:27017/review-summary";
 //const dbUrl = process.env.DB_URL; 
 // dbUrl = "mongodb://localhost:27017/review-summary";
 // "mongodb://localhost:27017/review-summary";
