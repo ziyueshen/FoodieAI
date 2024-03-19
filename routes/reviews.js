@@ -8,6 +8,4 @@ router.route('/sum')
 router.route('/ask')
     .post(reviews.ask)
 
-router.route('/get')
-
 module.exports = router;

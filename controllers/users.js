@@ -22,24 +22,30 @@ module.exports.register = async (req, res) => {
 
 module.exports.login = (req, res) => {
     // 登录成功，返回token
-    const token = jwt.sign({ username: req.body.username }, secretKey, { expiresIn: '3h' });
+    try {
+        const token = jwt.sign({ username: req.body.username }, secretKey, { expiresIn: '3h' });
 
-    // 设置 Cookie
-    res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+        // 设置 Cookie
+        res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
 
-    // 返回认证令牌给前端
-    res.json({ token });
+        // 返回认证令牌给前端
+        res.json({ token });
+        console.log('login success');
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: 'Unknown error' });
+    }
 }
 
 // 通过中间件验证认证令牌
 module.exports.user = (req, res) => {
-// 认证通过，req.user 中包含用户信息
-res.json({ userId: req.user.userId, loggedIn: true } || null);
+    // 认证通过，req.user 中包含用户信息
+    res.json({ userId: req.user.userId, loggedIn: true } || null);
 }
 
 module.exports.logout = (req, res, next) => {
     try {
-        req.logout(function(err) {
+        req.logout(function (err) {
             if (err) {
                 console.error(err);
                 res.status(500).json({ error: 'Failed to logout' });
@@ -52,7 +58,7 @@ module.exports.logout = (req, res, next) => {
         console.log(error);
         res.status(500).json({ error: 'Unknown error' });
     }
-    
+
     // req.logout(function (err) {
     //     if (err) {
     //         return next(err);

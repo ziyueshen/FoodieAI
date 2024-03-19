@@ -4,6 +4,13 @@ if (process.env.NODE_ENV !== 'production') {
 
 const express = require("express");
 const path = require("path");
+const app = express();
+// app.use( express.static('public'))
+// app.use(express.static(path.join(__dirname, 'public')));
+// app.get('/public/', (req, res) => {
+//     res.sendFile(path.join(__dirname, 'public', 'index.html'));
+//   });
+
 const cors = require('cors');
 const mongoose = require("mongoose");
 const passport = require("passport");
@@ -25,7 +32,7 @@ const dbUrl = process.env.DB_URL;
 const secretKey = process.env.secretKey;
 const mapKey = process.env.mapKey;
 const AIkey = process.env.AIkey;
-
+ 
 const store = MongoStore.create({
     mongoUrl: dbUrl,
     touchAfter: 24 * 3600, // time period in seconds
@@ -61,17 +68,8 @@ db.once("open", () => {
     console.log("Database connected");
 })
 
-const app = express();
-app.use(express.static(path.join(__dirname, 'public')));
+ 
 
-// 使用 cors 中间件
-// app.use(cors({
-//     origin: 'http://localhost:5173', // 允许的来源
-//     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // 允许的 HTTP 方法
-//     credentials: true, // 允许发送身份验证凭证（例如 cookies）
-// }));
-
-// parsing the body
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -86,14 +84,18 @@ passport.serializeUser((user, done) => {
     done(null, user.id);
 });
 
-passport.deserializeUser((id, done) => {
-    User.findById(id, (err, user) => {
-        if (err) {
-            console.error('Error during deserialization:', err);
-            return done(err);
-        }
-        done(null, user);
-    });
+passport.deserializeUser((id) => {
+    return User.findById(id)
+        .then((user) => {
+            if (!user) {
+                throw new Error('User not found');
+            }
+            return user;
+        })
+        .catch((error) => {
+            console.error('Error during deserialization:', error);
+            throw error;
+        });
 });
 
 const apiRoute = require("./routes/reviews");
@@ -104,6 +106,14 @@ app.use("/users", userRoute);
 
 const historyRoute = require("./routes/history");
 app.use("/chats", historyRoute);
+
+
+// 使用 cors 中间件
+// app.use(cors({
+//     origin: 'http://localhost:5173', // 允许的来源
+//     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // 允许的 HTTP 方法
+//     credentials: true, // 允许发送身份验证凭证（例如 cookies）
+// }));
 
 app.all('*', (req, res, next) => {
     next(new ExpressError('Page Not Found', 404))
