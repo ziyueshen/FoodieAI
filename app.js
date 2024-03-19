@@ -27,7 +27,7 @@ const dbUrl = process.env.DB_URL;
 const secretKey = process.env.secretKey;
 const mapKey = process.env.mapKey;
 const AIkey = process.env.AIkey;
- 
+
 const store = MongoStore.create({
     mongoUrl: dbUrl,
     touchAfter: 24 * 3600, // time period in seconds
@@ -63,7 +63,11 @@ db.once("open", () => {
     console.log("Database connected");
 })
 
-app.use(cors());
+app.use(cors({
+    origin: 'https://myfoodieai.onrender.com/',
+    methods: 'GET,POST',
+    credentials: true // 允许发送身份验证凭证（例如 cookies）
+}));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
