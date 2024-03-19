@@ -5,11 +5,6 @@ if (process.env.NODE_ENV !== 'production') {
 const express = require("express");
 const path = require("path");
 const app = express();
-// app.use( express.static('public'))
-// app.use(express.static(path.join(__dirname, 'public')));
-// app.get('/public/', (req, res) => {
-//     res.sendFile(path.join(__dirname, 'public', 'index.html'));
-//   });
 
 const cors = require('cors');
 const mongoose = require("mongoose");
@@ -68,7 +63,7 @@ db.once("open", () => {
     console.log("Database connected");
 })
 
- 
+app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -106,14 +101,6 @@ app.use("/users", userRoute);
 
 const historyRoute = require("./routes/history");
 app.use("/chats", historyRoute);
-
-
-// 使用 cors 中间件
-// app.use(cors({
-//     origin: 'http://localhost:5173', // 允许的来源
-//     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // 允许的 HTTP 方法
-//     credentials: true, // 允许发送身份验证凭证（例如 cookies）
-// }));
 
 app.all('*', (req, res, next) => {
     next(new ExpressError('Page Not Found', 404))
