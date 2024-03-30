@@ -21,9 +21,7 @@ const Chat = require("./models/chat");
 
 const dbUrl = process.env.DB_URL;
 //dbUrl = "mongodb://localhost:27017/review-summary";
-//const dbUrl = process.env.DB_URL; 
-// dbUrl = "mongodb://localhost:27017/review-summary";
-// "mongodb://localhost:27017/review-summary";
+
 const secretKey = process.env.secretKey;
 const mapKey = process.env.mapKey;
 const AIkey = process.env.AIkey;
@@ -54,7 +52,6 @@ const sessionConfig = {
 
 mongoose.connect(dbUrl, {
     useNewUrlParser: true,
-    //useCreateIndex: true,
     useUnifiedTopology: true
 });
 const db = mongoose.connection;

@@ -21,14 +21,10 @@ module.exports.register = async (req, res) => {
 }
 
 module.exports.login = (req, res) => {
-    // 登录成功，返回token
     try {
-        const token = jwt.sign({ username: req.body.username }, secretKey, { expiresIn: '3h' });
+        const token = jwt.sign({ username: req.body.username }, secretKey, { expiresIn: '10h' });
 
-        // 设置 Cookie
-        res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
-
-        // 返回认证令牌给前端
+        // return token
         res.json({ token });
         console.log('login success');
     } catch (error) {
@@ -37,9 +33,8 @@ module.exports.login = (req, res) => {
     }
 }
 
-// 通过中间件验证认证令牌
+// auth user by middleware
 module.exports.user = (req, res) => {
-    // 认证通过，req.user 中包含用户信息
     res.json({ userId: req.user.userId, loggedIn: true } || null);
 }
 
@@ -51,18 +46,10 @@ module.exports.logout = (req, res, next) => {
                 res.status(500).json({ error: 'Failed to logout' });
                 return;
             }
-            // 在这里处理注销成功后的逻辑
             res.status(200).json({ message: 'Logout successful' });
         });
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: 'Unknown error' });
     }
-
-    // req.logout(function (err) {
-    //     if (err) {
-    //         return next(err);
-    //     }
-    //     res.redirect('/');
-    // });
 }

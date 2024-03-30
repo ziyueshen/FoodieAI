@@ -15,7 +15,7 @@ module.exports.messages = async (req, res) => {
     try {
         await chat.save();
         console.log('Chat saved');
-        res.json({ success: true }); // 发送 JSON 响应，包含一个布尔值 true
+        res.json({ success: true }); 
     } catch (error) {
         console.error('Error saving chat:', error);
         res.status(500).send('Failed to save chat');

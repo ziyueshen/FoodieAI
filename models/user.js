@@ -9,7 +9,7 @@ const UserSchema = new Schema({
     }
 });
 
-// adding username and password to the UserSchema
+
 UserSchema.plugin(passportLocalMongoose);
 
 module.exports = mongoose.model("User", UserSchema);

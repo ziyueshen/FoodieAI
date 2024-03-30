@@ -54,7 +54,6 @@ module.exports.sum = async (req, res) => {
             reviews_all.push(extractedData);
         }
         const prompt = "You are a culinary guide, summarizing local delicacies based on the information I provide. Be objective and neutral."
-            //+ "Divide it into paragraphs, keep it well-organized, and avoid writing in one large block."
             + "Categorize the restaurants, refrain from stating information without actual content. Add a little emoji. Your response must be no more than 100 words."
         const msg = prompt + "Summarize the info: " + JSON.stringify(reviews_all);
         message_list.push({ role: "system", content: msg });
